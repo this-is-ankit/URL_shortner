@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const URL = require("./models/url")
 const path = require('path')
+const cookieParser = require('cookie-parser');
+const {restrictToLoggedInUserOnly} = require('./middleware/auth')
 const PORT = 8001;
 
 
@@ -21,7 +23,7 @@ const { connectToMongo } = require("./connect");
 app.use(express.json()) //MiddleWares
 app.use(express.urlencoded({extended: false})) // A Middleware to accept the form data from home.ejs and also json data accept
 app.use("/" , staticRoute);
-app.use("/url", urlRoute);
+app.use("/url", restrictToLoggedInUserOnly , urlRoute);
 app.use("/user", userRoute);
 
 app.get("/test", async (req, res) => {
